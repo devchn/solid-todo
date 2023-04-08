@@ -22,6 +22,7 @@ export default function Todo() {
                     class="flex-1 block border"
                     value={title()}
                     onChange={(e) => {
+                        console.log("input change", e.target.value);
                         setTitle(e.target.value);
                     }}
                 />
