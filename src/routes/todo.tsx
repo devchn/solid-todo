@@ -10,7 +10,7 @@ type Todo = {
 
 export default function Todo() {
   let todoId = 0;
-  const [todos, setTodos] = createStore<Todo[]>([]);
+  const [todos, setTodos] = createSignal<Todo[]>([]);
   const [title, setTitle] = createSignal("");
   let input: HTMLInputElement | undefined = undefined;
 
@@ -45,9 +45,8 @@ export default function Todo() {
         </button>
       </div>
       <ul>
-        <For each={todos}>
+        <For each={todos()}>
           {(todo) => {
-            const {id, title} = todo;
 
             return (
                 <>
@@ -55,11 +54,20 @@ export default function Todo() {
                     type="checkbox"
                     checked={todo.done}
                     onChange={(e) => {
-                        // setTodos(todo => todo.id === id, "done", e.target.checked);
+                      setTodos(prev => prev.map(prev => {
+                        if (prev.id === todo.id) {
+                          return {
+                            ...prev,
+                            done: false
+                          }
+                        }
+                        return prev
+                      }))
+                        //setTodos(todo => todo.id === id, "done", false);
                     }}
                   />
                   <li class="bg-slate-600 text-gray-200 border rounded-sm px-5 py-2">
-                    {title}
+                    {todo.title}
                   </li>
                 </>
               )
